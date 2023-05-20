@@ -18,7 +18,7 @@ const resolvers = {
           console.log(err);
         }
       }
-      throw new AuthenticationError("NOT LOGGED IN");
+      throw new AuthenticationError("Log in first");
     },
   },
 
@@ -37,12 +37,14 @@ const resolvers = {
       try {
         const user = await User.findOne({ email });
         if (!user) {
-          throw new AuthenticationError("Invalid Credentials");
+          throw new AuthenticationError("Invalid Login");
         }
         const correctPassword = await user.isCorrectPassword(password);
+
         if (!correctPassword) {
-          throw new AuthenticationError("Invalid Credentials");
+          throw new AuthenticationError("Invalid Login");
         }
+
         const token = signToken(user);
         return { token, user };
       } catch (err) {
